@@ -47,6 +47,7 @@ class UserDBManagerTest {
             for(User user : usersList) {
                 userDBManager.addUser(user);
             }
+            db.closeConnection();
         } catch(SQLException e) {
             throw new RuntimeException(e);
         }
@@ -54,15 +55,17 @@ class UserDBManagerTest {
     @Test
     void updateUser() {
         try {
-            String oldPw = userTwo.getPassword();
+            db.openConnection();
+            User userToUpdate = userDBManager.findUser(userTwo.getEmail(), userTwo.getPassword());
+            String oldPw = userToUpdate.getPassword();
             String updatedPw = "MyNewPassword123";
-            userTwo.setPassword(updatedPw);
-            userTwo.setID(2);
-            userDBManager.updateUser(userTwo);
-            User updatedUser = userDBManager.findUser(userTwo.getEmail(), userTwo.getPassword());
-            assertEquals(updatedUser.getPassword(), updatedPw);
-            userTwo.setPassword(oldPw);
-            userDBManager.updateUser(userTwo);
+            userToUpdate.setPassword(updatedPw);
+            userDBManager.updateUser(userToUpdate);
+            User foundUser = userDBManager.findUser(userToUpdate.getEmail(), userToUpdate.getPassword());
+            assertEquals(foundUser.getPassword(), updatedPw);
+            foundUser.setPassword(oldPw);
+            userDBManager.updateUser(foundUser);
+            db.closeConnection();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -70,6 +73,7 @@ class UserDBManagerTest {
     @Test
     void queryUsers() {
         try {
+            db.openConnection();
             ArrayList<User> queriedUsers = userDBManager.queryUsers();
             for(int i = 0; i < queriedUsers.size(); i++) {
                 User queriedUser = queriedUsers.get(i);
@@ -82,26 +86,38 @@ class UserDBManagerTest {
                 assertEquals(queriedUser.getDOBAsString(), demoUser.getDOBAsString());
                 assertEquals(queriedUser.getPhoneNumber(), demoUser.getPhoneNumber());
             }
+            db.closeConnection();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
     @Test
     void deleteUser() {
-//        try {
-//            userDBManager.removeUser(1);
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
+        try {
+            db.openConnection();
+            User testUser = new User("Hello@hotmail.com", "Password222", "Hey", "There", LocalDate.of(1992, 3, 11),
+                    "0417503523");
+            userDBManager.addUser(testUser);
+            User foundUser = userDBManager.findUser(testUser.getEmail(), testUser.getPassword());
+            assertNotNull(foundUser);
+            userDBManager.deleteUser(foundUser.getID());
+            User deletedUser = userDBManager.findUser(testUser.getEmail(), testUser.getPassword());
+            assertNull(deletedUser);
+            db.closeConnection();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Test
     void findUser() {
         try {
+            db.openConnection();
             User realUser = userDBManager.findUser(userOne.getEmail(), userOne.getPassword());
             assertNotNull(realUser);
             User fakeUser = userDBManager.findUser("KimKardasian1954@Gmail.com", "Kimk123");
             assertNull(fakeUser);
+            db.closeConnection();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -109,6 +125,7 @@ class UserDBManagerTest {
     @Test
     void findUserByID() {
         try {
+            db.openConnection();
             User user = userDBManager.findUserByID(1);
             assertNotNull(user);
 
@@ -117,6 +134,7 @@ class UserDBManagerTest {
 
             user = userDBManager.findUserByID(3);
             assertNull(user);
+            db.closeConnection();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -126,9 +144,11 @@ class UserDBManagerTest {
     @Test
     void authenticateUser() {
         try {
+            db.openConnection();
             assertTrue(userDBManager.authenticateUser(userOne.getEmail(), userOne.getPassword()));
             assertTrue(userDBManager.authenticateUser(userTwo.getEmail(), userTwo.getPassword()));
             assertFalse(userDBManager.authenticateUser("BobbyG@gmail.com", "Bobmeister123"));
+            db.closeConnection();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
