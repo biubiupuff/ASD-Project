@@ -1,10 +1,5 @@
-# ASD-Project
 
-Download Glassfish 7.0.3
-https://projects.eclipse.org/projects/ee4j.glassfish/releases/7.0.3
 
-Download db browser
-https://sqlitebrowser.org/dl/
 
 # ASD-Project
 
@@ -21,3 +16,10 @@ Download and install DB Browser for SQLite: [https://sqlitebrowser.org/dl/](http
 
 *4)
 Open ASD_DB.db or ASD_DB_TEST.db for tests in db browser
+
+## Downloads
+Download Glassfish 7.0.3
+https://projects.eclipse.org/projects/ee4j.glassfish/releases/7.0.3
+
+Download db browser
+https://sqlitebrowser.org/dl/
