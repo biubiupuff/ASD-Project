@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Parking Management System</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+    <style>
+        .opeBtn{
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Parking Management System</h2>
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Location</th>
+            <th scope="col">Small Spot</th>
+            <th scope="col">Medium Spot</th>
+            <th scope="col">Large Spot</th>
+            <th scope="col">Operation</th>
+        </tr>
+        </thead>
+        <tbody id="detail">
+
+        </tbody>
+    </table>
+</div>
+</body>
+<script>
+    let parkingDetails = [{id:1, location:'Kent St', sSpot: 100, mSpot: 350, lSpot: 50}, {id:2, location:'UTS', sSpot: 100, mSpot: 350, lSpot: 50}, {id:3, location:'Broadway', sSpot: 100, mSpot: 350, lSpot: 50}];
+    let parkingTable = document.getElementById('detail');
+    parkingDetails.forEach(unit =>{
+        const row = `<tr><td>${unit.id}</td> <td>${unit.location}</td> <td>${unit.sSpot}</td> <td>${unit.mSpot}</td> <td>${unit.lSpot}</td><td><button type="button" class="btn btn-primary opeBtn">Edit</button><button type="button" class="btn btn-danger opeBtn">Delete</button></td></tr>`;
+        parkingTable.innerHTML += row;
+    })
+</script>
+
+</html>
